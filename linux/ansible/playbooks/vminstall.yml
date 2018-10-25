@@ -1,2 +1,22 @@
 ---
-...
+- hosts: vms
+  gather_facts: False
+  remote_user: benjamin
+  become: yes
+  become_user: root
+  become_method: sudo
+
+
+  tasks:
+          - name: update & upgrade
+            raw: yum update -y || yum upgrade -y 
+         
+          - name: install packages
+            yum:
+              name: "{{ packages }}"
+            vars:
+              packages: 
+              - htop
+              - vim
+              state: present
+
