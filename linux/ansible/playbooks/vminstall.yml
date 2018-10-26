@@ -1,5 +1,5 @@
 ---
-- hosts: vms
+- hosts: mattermost-docker
   gather_facts: False
   remote_user: benjamin
   become: yes
