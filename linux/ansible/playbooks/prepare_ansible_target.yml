@@ -1,12 +1,11 @@
 ---
 
-- hosts: containers
+- hosts: mattermost-group
   gather_facts: False
-  remote_user: benjamin
+  remote_user: root
   become: yes
   become_user: root
   become_method: sudo
-
 
   tasks:
           - name: Install Python
