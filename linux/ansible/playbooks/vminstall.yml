@@ -8,15 +8,14 @@
 
 
   tasks:
-          - name: update & upgrade
-            raw: yum update -y || yum upgrade -y 
+          # - name: update & upgrade
+          #  raw: yum update -y || yum upgrade -y 
          
           - name: install packages
             yum:
-              name: "{{ packages }}"
-            vars:
-              packages: 
-              - htop
-              - vim
+              name: vim #"{{ packages }}"
               state: present
+           #vars:
+             #packages: 
+             #state: present
 
