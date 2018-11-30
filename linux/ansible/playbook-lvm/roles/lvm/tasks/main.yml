@@ -1,0 +1,52 @@
+- name: update and upgrade le systeme
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: installe lvm
+  become: true
+  apt:
+    name: lvm2
+    state: installed
+    update_cache: no
+
+- name: verifie que lvm fonctionne
+  become: true
+  service: 
+    name: lvm
+      state: started
+      enabled: yes
+
+- name: cree un groupe de volume (vgcreate) sur /dev/sdb
+  lvg:
+    vg: myfirstvolumegrp
+    pvs: /dev/sdb
+
+- name: creee un volume logique sur le vg precedemment cree 
+  lvol:
+    vg: myfirstvolumegrp
+    lv: myfirstlogicalvol
+    size: 1000
+  
+- name: cree le dossier dans lequel on montera notre volume logique
+  become: true
+  file:
+    path: /home/tristan/dossierLVM
+    state: directory
+    owner: tristan 
+    group: tristan
+    mode: 0775
+    recurse: yes
+
+- name: formate myfirstlogicalvol en ext4
+  filesystem:
+    fstype: ext4
+    dev: /dev/myfirstvolumegrp/myfirstlogicalvol
+
+- name: monte le volume myfirstlogicalvol
+  mount:
+    path: /home/tristan/dossierLVM
+    src: /dev/myfirstvolumegrp/myfirstlogicalvol
+    fstype: ext4
+    state: present
