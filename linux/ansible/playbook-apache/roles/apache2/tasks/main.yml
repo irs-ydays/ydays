@@ -1,0 +1,55 @@
+- name: update and upgrade le systeme
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: installe apache
+  become: true
+  apt:
+    name: apache2
+    state: installed
+    update_cache: no
+
+- name: verifie que apache fonctionne
+  become: true
+  service: 
+    name: apache2
+      state: started
+      enabled: yes
+
+- name: cree le dossier pour un nouveau virtual host
+  become: true
+  file:
+    path: /var/www/mon-site.com/html
+    state: directory
+    owner: tristan 
+    group: tristan
+    mode: 0775
+    recurse: yes
+
+- name: upload le fichier index.html du site
+  become: true
+  copy: src=files/index.html dest=/var/www/mon-site.com/html/
+  
+- name: upload le fichier de configuration du site
+  become: true
+  copy: src=files/mon-site.com.conf dest=/etc/apache2/sites-available/mon-site.com.conf
+
+- name: active le site
+  become: true
+  command: a2ensite mon-site.com.conf
+
+- name: desactive le site par defaut
+  become: true
+  command: a2dissite 000-default.conf
+ 
+- name: relance apache
+  become: true
+  service:
+    name: httpd
+    state: restarted
+ 
+
+
+
